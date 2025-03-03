@@ -7,6 +7,8 @@
 ## Overview
 This repository contains a project focused on gun registration, background checks, and firearm-related data analysis. The project may include data processing scripts, visualization tools, and compliance tracking related to firearm registrations.
 
+<img src="images/trend.png" width="500px;">
+
 ## Features
 - Firearm background check analysis
 - Gun registration data management
