@@ -9,11 +9,21 @@ This repository contains a project focused on gun registration, background check
 
 <img src="images/trend.png" width="500px;">
 
-## Features
-- Firearm background check analysis
-- Gun registration data management
-- Compliance and reporting tools
-- Data visualization
+## Repository Structure
+
+- **Data Files:**
+  - `firearm_deaths.csv`: Contains data on firearm-related deaths.
+  - `nics-firearm-background-checks.csv`: Includes records of firearm background checks.
+  - `states.csv`: Provides information on U.S. states, possibly for data merging or reference.
+
+- **Malloy Files:**
+  - `backgroundsource.malloy`: Defines the data models and relationships for analysis.
+  - `guns.malloynb`: A Malloy notebook containing queries and visualizations related to gun data.
+
+- **Supporting Files:**
+  - `README.md`: Offers an overview and instructions for the project.
+  - `.gitattributes`: Manages repository attributes and settings.
+  - `images/`: Directory potentially containing visual assets for documentation or analysis.
 
 ## Installation
 To get started, clone the repository and install dependencies:
@@ -29,6 +39,25 @@ If applicable, install required dependencies:
 pip install -r requirements.txt  # For Python projects
 yarn install  # For JavaScript projects
 ```
+
+## Setting Up the Malloy Extension in VS Code
+To effectively work with Malloy files (`.malloy` and `.malloynb`), it's recommended to install the Malloy extension in VS Code. Follow these steps:
+
+1. **Install Visual Studio Code:**
+   - Download and install VS Code from the [official website](https://code.visualstudio.com/).
+
+2. **Add the Malloy Extension:**
+   - Open VS Code.
+   - Navigate to the Extensions view by clicking the square icon on the sidebar or pressing `Ctrl+Shift+X`.
+   - Search for "Malloy" in the Extensions Marketplace.
+   - Locate the [Malloy extension](https://marketplace.visualstudio.com/items?itemName=malloydata.malloy-vscode) and click "Install".
+
+3. **Explore Malloy Features:**
+   - With the extension installed, open `.malloy` or `.malloynb` files to access Malloy's data modeling and querying capabilities.
+   - Utilize the extension's features to run queries, visualize data, and develop models.
+
+For a visual walkthrough of the installation process and an introduction to using Malloy in VS Code, you might find this tutorial helpful:  
+[Malloy VS Code Extension Setup](https://www.youtube.com/watch?v=icinLH7uQjM)
 
 ## Usage
 Run the application with:
