@@ -1,151 +1,46 @@
->>>markdown
-##### Firearm Background Checks by FBI
-This data presents the monthly counts of firearm background checks processed by the FBI, categorized by month, state, and firearm type.
 >>>malloy
-source: states_lookup_by_state is duckdb.table('./states.csv') extend {
-    primary_key: state
-}
-
-source: states_lookup_by_code is duckdb.table('./states.csv') extend {
-    primary_key: code
-}
-
-source: firearm_deaths is duckdb.table('./firearm_deaths.csv') extend {
-    rename: death_year is `YEAR`
-    measure: total_deaths is sum(cast(DEATHS as number))
-    join_one: states_lookup_by_code with STATE
-}
-
-source: background_check is duckdb.table('./nics-firearm-background-checks.csv') extend {
-    dimension: full_date is concat(`month`, '-01')
-    dimension: BackgroundCheckDate is strptime!date(full_date, '%Y-%m-%d')
-    dimension: BackgroundCheckYear is BackgroundCheckDate.year
-    dimension: BackgroundCheckMonth is strftime!string(BackgroundCheckDate,'%B')
-
-    measure: 
-        #Total Background checks
-        BackgroundChecks is sum(totals)
-        
-        #Firearm Type Breakdown:
-        HandgunChecks is sum(handgun)
-        LongGunChecks is sum(long_gun)
-        OtherFirearmChecks is sum(other)
-        MultipleFirearmChecks is sum(multiple)
-        AdminChecks is sum(admin)
-        HandgunvsLongGunRatio is sum(handgun) / sum(long_gun)
-        
-        #Pre-Pawn Checks:
-        PrePawnHandgun is sum(prepawn_handgun)
-        PrePawnLongGun is sum(prepawn_long_gun)
-        PrePawnOther is sum(prepawn_other)
-        PrePawnRate is (sum(prepawn_handgun) + sum(prepawn_long_gun) + sum(prepawn_other)) / sum(totals)
-        PrePawnTotal is sum(prepawn_handgun) + sum(prepawn_long_gun) + sum(prepawn_other)
-
-        #Redemption Checks:
-        RedemptionHandGun is sum(redemption_handgun)
-        RedemptionLongGun is sum(redemption_long_gun)
-        RedemptionOther is sum(redemption_other)
-        RedemptionRate is (sum(redemption_handgun) + sum(redemption_long_gun) + sum(redemption_other)) / sum(totals)
-        TotalRedemtionChecks is (sum(redemption_handgun) + sum(redemption_long_gun) + sum(redemption_other))
-
-        #Returned Firearms:
-        ReturnedHandgun is sum(returned_handgun)
-        ReturnedLongGun is sum(returned_long_gun)
-        ReturnedOther is sum(returned_other)
-        ReturnedRate is (sum(returned_handgun) + sum(returned_long_gun) + sum(returned_other)) / sum(totals)
-        TotalReturnedChecks is (sum(returned_handgun) + sum(returned_long_gun) + sum(returned_other))
-
-        #Private Sales:
-        PrivateSaleHandgun is sum(private_sale_handgun)
-        PrivateSaleLongGun is sum(private_sale_long_gun)
-        PrivateSaleOther is sum(private_sale_other)
-        PrivateSaleRate is (sum(private_sale_handgun) + sum(private_sale_long_gun) + sum(private_sale_other)) / sum(totals)
-        TotalPrivateSaleChecks is (sum(private_sale_handgun) + sum(private_sale_long_gun) + sum(private_sale_other))
-    
-        #Return to Seller:
-        ReturntoSellerHandgun is sum(return_to_seller_handgun)
-        ReturntoSellerLongGun is sum(return_to_seller_long_gun)
-        ReturntoSellerOther is sum(return_to_seller_other)
-        ReturntoSellerRate is (sum(return_to_seller_handgun) + sum(return_to_seller_long_gun) + sum(return_to_seller_other)) / sum(totals)
-        TotalReturntoSellerChecks is (sum(return_to_seller_handgun) + sum(return_to_seller_long_gun) + sum(return_to_seller_other))
- 
-        #Permit Measures
-        PermitCheckRate is sum(permit) / sum(totals)
-        PermitChecks is sum(permit)
-        PermitRechecks is sum(permit_recheck)
-    
-    join_one: states_lookup_by_state with state
-} 
+import "backgroundsource.malloy"
 >>>markdown
 ##### Total background checks by year
 >>>malloy
 # dashboard
 run: background_check -> {
-    aggregate: BackgroundChecks
+    aggregate: `The data on firearm background checks from 1998 to 2025 shows a clear upward trend over the years, with notable spikes during certain periods. In the early years, background checks remained below 10 million annually but began increasing significantly in the mid-2000s. By the 2010s, yearly checks surpassed 20 million, reflecting growing firearm purchases and regulatory screenings.` is BackgroundChecks
     # line_chart
-    nest: Check_By_Year is {
+    nest: `From 1998 to 2025, a total of 509,773,611 firearm background checks were conducted. The highest annual count was in 2020 with 39,326,079 checks, while the lowest was in 1998 with 891,898 checks. Background checks have generally increased over time, peaking in 2020-2021 before declining in recent years. The 2025 data (currently 2,299,989 checks) appears incomplete.` is {
         group_by:  BackgroundCheckYear
         aggregate: BackgroundChecks
     }
-    # line_chart
-    nest: Check_By_Month is {
-        group_by:  BackgroundCheckYear
-        aggregate: BackgroundChecks
-        group_by: BackgroundCheckMonth
+
+    nest: `Annual Background Checks` is {
+        group_by: BackgroundCheckYear
+        aggregate: BackgroundChecks 
+        calculate: `Annual Change` is (BackgroundChecks - lag(BackgroundChecks))
+        limit: 5000
     }
-}
->>>markdown
-##### Total background checks by month
-Gun purchases correlate to end of hunting season, Christmas, and tax returns.
->>>malloy
-run: background_check -> {
-    aggregate: BackgroundChecks
+
     # bar_chart
-    nest: Check_By_Year is {
-        group_by:  BackgroundCheckMonth
+    nest: `Gun purchases correlate to end of hunting season, Christmas, and tax returns.` is {
+        group_by:  BackgroundCheckMonth, BackgroundCheckMonthD
         aggregate: BackgroundChecks
+        order_by: BackgroundCheckMonthD
+    }
+
+    
+    nest: `The firearm background check data by state reveals that Kentucky (58.9 million) and Illinois (51.1 million) lead the nation in total checks, significantly surpassing other states. This is largely due to unique state policies, such as Kentucky’s monthly rechecks of concealed carry permits and Illinois’ requirements for firearm owner identification renewals. Texas (32.5 million) and California (29.6 million), the two most populous states, follow with high numbers, reflecting their large populations and firearm markets. ` is {
+        group_by: `State` is state
+        aggregate: BackgroundChecks
+    }
+
+    # shape_map
+        nest: ` ` is {
+        group_by:  state
+        aggregate: `Check density` is BackgroundChecks
     }
 }
 >>>markdown
 #### Background checks by state
 Firearm background check laws vary by state, but many states require background checks for all firearm sales.
->>>malloy
-
-run: background_check -> {
-    group_by: state
-    aggregate: BackgroundChecks
-}
-# dashboard
-run: background_check -> {
-    group_by: state
-    nest: Check_By_Year is {
-        group_by: BackgroundCheckYear
-        aggregate: BackgroundChecks
-    }
-    # line_chart
-    nest: Check_By_Year_chart is {
-        group_by: BackgroundCheckYear
-        aggregate: BackgroundChecks
-    }
-}
-
-# line_chart
-run: background_check -> {
-    group_by: BackgroundCheckYear
-    aggregate: BackgroundChecks
-    group_by: state
-    limit: 50000
-}
-
-run: background_check -> {
-    aggregate: BackgroundChecks
-
-    # shape_map
-        nest: Heatmap_By_State is {
-        group_by:  state
-        aggregate: BackgroundChecks
-    }
-}
 >>>markdown
 #### Redemption Background Checks
 A firearm redemption check is a background check performed using the National Instant Criminal Background Check System (NICS) when a pawned firearm is redeemed. This check verifies that the person redeeming the firearm is not prohibited from owning a gun.

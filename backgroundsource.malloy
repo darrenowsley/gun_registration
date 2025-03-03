@@ -1,0 +1,75 @@
+source: states_lookup_by_state is duckdb.table('./states.csv') extend {
+    primary_key: state
+}
+
+source: states_lookup_by_code is duckdb.table('./states.csv') extend {
+    primary_key: code
+}
+
+source: firearm_deaths is duckdb.table('./firearm_deaths.csv') extend {
+    rename: death_year is `YEAR`
+    measure: total_deaths is sum(cast(DEATHS as number))
+    join_one: states_lookup_by_code with STATE
+}
+
+source: background_check is duckdb.table('./nics-firearm-background-checks.csv') extend {
+    dimension: full_date is concat(`month`, '-01')
+    dimension: BackgroundCheckDate is strptime!date(full_date, '%Y-%m-%d')
+    dimension: BackgroundCheckYear is BackgroundCheckDate.year
+    dimension: BackgroundCheckMonth is strftime!string(BackgroundCheckDate,'%B')
+    dimension: BackgroundCheckMonthD is strptime!date(BackgroundCheckMonth, '%B')
+
+    measure: 
+        #Total Background checks
+        BackgroundChecks is sum(totals)
+        
+        #Firearm Type Breakdown:
+        HandgunChecks is sum(handgun)
+        LongGunChecks is sum(long_gun)
+        OtherFirearmChecks is sum(other)
+        MultipleFirearmChecks is sum(multiple)
+        AdminChecks is sum(admin)
+        HandgunvsLongGunRatio is sum(handgun) / sum(long_gun)
+        
+        #Pre-Pawn Checks:
+        PrePawnHandgun is sum(prepawn_handgun)
+        PrePawnLongGun is sum(prepawn_long_gun)
+        PrePawnOther is sum(prepawn_other)
+        PrePawnRate is (sum(prepawn_handgun) + sum(prepawn_long_gun) + sum(prepawn_other)) / sum(totals)
+        PrePawnTotal is sum(prepawn_handgun) + sum(prepawn_long_gun) + sum(prepawn_other)
+
+        #Redemption Checks:
+        RedemptionHandGun is sum(redemption_handgun)
+        RedemptionLongGun is sum(redemption_long_gun)
+        RedemptionOther is sum(redemption_other)
+        RedemptionRate is (sum(redemption_handgun) + sum(redemption_long_gun) + sum(redemption_other)) / sum(totals)
+        TotalRedemtionChecks is (sum(redemption_handgun) + sum(redemption_long_gun) + sum(redemption_other))
+
+        #Returned Firearms:
+        ReturnedHandgun is sum(returned_handgun)
+        ReturnedLongGun is sum(returned_long_gun)
+        ReturnedOther is sum(returned_other)
+        ReturnedRate is (sum(returned_handgun) + sum(returned_long_gun) + sum(returned_other)) / sum(totals)
+        TotalReturnedChecks is (sum(returned_handgun) + sum(returned_long_gun) + sum(returned_other))
+
+        #Private Sales:
+        PrivateSaleHandgun is sum(private_sale_handgun)
+        PrivateSaleLongGun is sum(private_sale_long_gun)
+        PrivateSaleOther is sum(private_sale_other)
+        PrivateSaleRate is (sum(private_sale_handgun) + sum(private_sale_long_gun) + sum(private_sale_other)) / sum(totals)
+        TotalPrivateSaleChecks is (sum(private_sale_handgun) + sum(private_sale_long_gun) + sum(private_sale_other))
+    
+        #Return to Seller:
+        ReturntoSellerHandgun is sum(return_to_seller_handgun)
+        ReturntoSellerLongGun is sum(return_to_seller_long_gun)
+        ReturntoSellerOther is sum(return_to_seller_other)
+        ReturntoSellerRate is (sum(return_to_seller_handgun) + sum(return_to_seller_long_gun) + sum(return_to_seller_other)) / sum(totals)
+        TotalReturntoSellerChecks is (sum(return_to_seller_handgun) + sum(return_to_seller_long_gun) + sum(return_to_seller_other))
+ 
+        #Permit Measures
+        PermitCheckRate is sum(permit) / sum(totals)
+        PermitChecks is sum(permit)
+        PermitRechecks is sum(permit_recheck)
+    
+    join_one: states_lookup_by_state with state
+} 
