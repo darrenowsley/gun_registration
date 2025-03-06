@@ -33,6 +33,7 @@ This analysis aims to explore trends in firearm background checks across differe
 - **California Had the Highest Background Checks**
     - In January 2025, California had the highest total background checks at 120,876. Overall Kentucky has had the most background checks.
 <img src="./images/totalbgc.png" width="400px;">
+
 - **Permit Checks Are Significant**
     - Some states have a high number of permit background checks, with 31,865 permit checks in California alone in January 2025.
 - **Private Sales Are Notable in Certain States**
@@ -41,6 +42,8 @@ This analysis aims to explore trends in firearm background checks across differe
     - The "other" firearm category (which includes unknown or specialty firearms) shows variation, with California leading at 4,396 checks in January 2025.
 - **Permit Rechecks Are Common in Some States**
     - California had 10,967 permit rechecks in January 2025, significantly higher than other states, possibly indicating stringent permit renewal policies.
+
+<img src="./images/totalbgc.png" width="400px;">
 
 ## Setting Up the Malloy Extension in VS Code
 To effectively work with Malloy files (`.malloy` and `.malloynb`), it's recommended to install the Malloy extension in VS Code. Follow these steps:

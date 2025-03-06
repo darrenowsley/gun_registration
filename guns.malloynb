@@ -39,9 +39,6 @@ run: background_check -> {
     }
 }
 >>>markdown
-#### Background checks by state
-Firearm background check laws vary by state, but many states require background checks for all firearm sales.
->>>markdown
 #### Redemption Background Checks
 A firearm redemption check is a background check performed using the National Instant Criminal Background Check System (NICS) when a pawned firearm is redeemed. This check verifies that the person redeeming the firearm is not prohibited from owning a gun.
 >>>malloy
@@ -77,7 +74,7 @@ run: background_check -> {
     aggregate: TotalRedemtionChecks
 }
 >>>markdown
-#### RedemPre-Pawn Background Checks
+#### Pre-Pawn Background Checks
 Pre-Pawn background checks requested by an officially-licensed FFL on prospective firearm transferees seeking to pledge or pawn a firearm as security for the payment or repayment of money, prior to actually pledging or pawning the firearm.
 >>>malloy
 run: background_check -> {
@@ -215,8 +212,8 @@ Concealed carry laws vary by state. Some states allow people to carry concealed 
 run: background_check -> {
     aggregate: PermitChecks, PermitRechecks, PermitCheckRate
 
-    nest: types_of_guns is {
-        group_by: state
+    nest: ` ` is {
+        group_by: `State` is state
         aggregate: PermitChecks, PermitRechecks, PermitCheckRate
     }
 }
