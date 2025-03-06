@@ -25,6 +25,18 @@ This repository contains a project focused on gun registration, background check
   - `.gitattributes`: Manages repository attributes and settings.
   - `images/`: Directory potentially containing visual assets for documentation or analysis.
 
+## Interesting Data Facts
+- **California Had the Highest Background Checks**
+    - In January 2025, California had the highest total background checks at 120,876.
+- **Permit Checks Are Significant**
+    - Some states have a high number of permit background checks, with 31,865 permit checks in California alone in January 2025.
+- **Private Sales Are Notable in Certain States**
+    - In January 2025, California had 7,756 private sale handgun background checks, much higher than other states.
+- **"Other" Category Varies Widely**
+    - The "other" firearm category (which includes unknown or specialty firearms) shows variation, with California leading at 4,396 checks in January 2025.
+- **Permit Rechecks Are Common in Some States**
+    - California had 10,967 permit rechecks in January 2025, significantly higher than other states, possibly indicating stringent permit renewal policies.
+
 ## Installation
 To get started, clone the repository and install dependencies:
 
