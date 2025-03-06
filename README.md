@@ -6,11 +6,12 @@
 
 ## Background
 Firearm background checks in the United States are a key regulatory measure used to prevent unauthorized firearm purchases. The National Instant Criminal Background Check System (NICS), maintained by the FBI, processes these checks to ensure that individuals who are legally prohibited from owning firearms do not obtain them. The volume and trends of background checks serve as a proxy for firearm sales and can provide insights into firearm-related policy effectiveness, public safety concerns, and shifts in gun ownership patterns.
+<img src="./images/annual.png" width="400px;"><img src="./images/shapemap.png" width="400px;">
 
 ## Motivation
 This analysis aims to explore trends in firearm background checks across different states and over time. By examining variations in background check volumes, we can identify potential correlations with policy changes, socioeconomic factors, or major events (e.g., elections, crises, mass shootings, legislative changes) that may influence firearm purchases. The insights gained can be valuable for policymakers, law enforcement agencies, and researchers studying gun control effectiveness, public safety, and firearm market trends.
 
-<img src="images/trend.png" width="500px;">
+<img src="./images/trend.png" width="500px;">
 
 ## Repository Structure
 
